@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Mitra Robot</title>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <h2 style="text-align: center;"> Available slots</h2>
+      
+        {% for slot in slots%}
+      
+        <a href="/calender/confirmslot/{{slot}}" >             
+        
+    
+         
+           
+                 <div class="card"  style="width:25%;height:100px;background-color:darkblue;color: white;text-align: center;">
+                         
+                    
+                    <h4 style="padding-top: 33px;"> {{slot}} </h4>
+            
+            </div>
+        </a>
+         
+        {% endfor %}
+    </body>
+
+
+
+</html>

@@ -1,0 +1,352 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mitra Robot</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" media="print" href="print.css" />
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+  </head>
+  <body class="" style="background-color:rgb(223, 220, 220);"  >
+   
+   
+    <!-- Navigation steering -->
+  
+      <div class="row"  >
+      
+        <div class="col-md-4 col-xs-12 col-sm-8 col-lg-4" id="controls"  style="width: 42%;background-color:white"> <!--  1st column-->
+          <div id="preview">
+            <div class="row">
+        
+              <div class="col-md-4 col-xs-12 col-sm-8 col-lg-4" style="padding-top: 20px;" >
+                <p class="instructions" ><b>Video</b> </p>
+              </div>
+              <div class="col-md-4 col-xs-12 col-sm-8 col-lg-4" >
+                <button style="background-color:lightgray;color: black;"><b>Switch camera</b></button> 
+              </div>
+            </div>    
+            <div id="local-media"></div>
+            <button id="button-preview"  style="background-color:lightgray;color: black;"><b>Preview My Camera</b></button>
+            <br><br>
+            <div  style="width: 100%;text-align:right;padding-top:10px" >          
+            <h4><b> Patient : <span id="patient_name"></span></b> </h4>
+            <h4><b>Patient Id: <span id="patient_id"></span></b></h4>
+            <h4><b>Age : <span id="patient_age"></span></b></h4>
+            <h4><b>Gender: <span id="patient_gender"></span></b></h4>
+        </div>
+      </div>
+
+          <div class="row">
+            <div class="col-md-4 col-xs-12 col-sm-8 col-lg-4" >
+              <button class="btn btn-default hidden-print" id ="printForm" style="background-color:black;color:lightgrey;border-radius: 8px;">Print Receipt</button>
+             
+            </div>
+         <div class="col-md-4 col-xs-12 col-sm-8 col-lg-4" >
+         
+         <button class="btn btn-default hidden-print"  style="background-color:black;color: lightgray;border-radius: 8px;">Next Patient</button>
+         <br>
+        </div>
+        
+          </div>
+          <br>
+          </div>
+
+     
+          
+    <div class="col-md-4 col-xs-12 col-sm-8 col-lg-4" style="background-color:lightgray;width:0.5%;"><!--gap-->
+
+    </div>
+
+    
+      <div class="col-md-4 col-xs-12 col-sm-8 col-lg-4" style="background-color:white;width:55%;padding-top:25px;padding-bottom: 25px;" > <!-- 2nd column -->
+       
+        <div style="background-color:rgb(175, 171, 171);padding-left: 25px;padding-right: 25px;border-radius: 8px">
+             
+        
+          <div class="row" >
+            <div class="col-md-4 col-xs-12 col-sm-8 col-lg-4" style="width:50%;text-align:left;padding-left:10px;padding-top:10px;">
+            
+          <h3><b>Vitals</b></h3>
+          <br>
+          <h5><b> Pulse : <span id="patient_name"></span></b> </h5>
+          <h5><b>Temperature: <span id="patient_id"></span></b></h5>
+          <h5><b>BP: <span id="patient_age"></span></b></h5>
+          <h5><b>SP02: <span id="patient_gender"></span></b></h5>
+        </div>
+           <div class="col-md-4 col-xs-12 col-sm-8 col-lg-4" style="width:50%;text-align:left;padding-top:10px;">
+          
+            <h3><b>Patient habits</b></h3>
+          <br>
+          <h5><b> Blood group : <span id="blood"></span></b> </h5>
+          <h5><b>Smoking: <span id="smoking"></span></b></h5>
+          <h5><b>Drinking: <span id="drinking"></span></b></h5>
+         
+
+      
+           </div>
+          </div>
+ 
+         <!-- top form-->
+          <div style="text-align:left;padding-left:10px;padding-top:10px;">  
+          <form class="form-horizontal" id ="patient_form"   onsubmit="return false;" >
+          
+            <div class="form-group">
+            <label class="col-lg-3 col-sm-3" for="diagnosis" contenteditable="true">Diagnosis:</label>
+            <div class="col-lg-9 col-sm-9">
+              <input type="text" class="form-control" id="diagnosis" placeholder="diagnosis" name="diagnosis">
+            </div>
+          </div>
+            <div class="form-group">
+              <label class="col-lg-3 col-sm-3" for="allergy" contenteditable="true">Allergies:</label>
+              <div class="col-lg-9 col-sm-9">
+                <input type="text" class="form-control" id="allergy" placeholder="Not found any" name="allergy">
+              </div>
+            </div>
+            </form>
+        </div>
+        </div>
+        <!--bottom form -->
+        <div style="background-color:rgb(175, 171, 171);padding-left: 25px;padding-right: 25px;padding-top:5px;border-radius: 8px">
+          <div style="text-align:left;padding-left:10px;padding-top:10px">
+          <form class="form-horizontal" id ="patient_form"   onsubmit="return false;" >
+            <div class="form-group user_pass " >
+              <label class="col-lg-3 col-sm-3" for="others" contenteditable="true">Doctor Observations:</label>
+              <div class="col-lg-9 col-sm-9" style=" margin-bottom: 20px;">
+                <textarea class="form-control prescription"  id = "others" name ="others" rows="5"></textarea>
+              </div>
+            </div>
+           
+           
+            <div class="form-group" >
+              <label class="col-lg-3 col-sm-3 " for="lab" contenteditable="true">Lab Test:</label>
+              <div class="col-lg-9 col-sm-9">
+                <input type="text" class="form-control" id="lab" placeholder="Not required" name="lab">
+              </div>
+            </div>
+    
+            </form>
+       <!-- medicine table -->
+          <table  id ="precription" style="padding-left: 0%;width:100%">
+            <thead>
+              <tr>
+                <td><b>S.No</b></td>
+                <td><b>Medicine</b></td>
+                <td><b>Dosage</b></td>
+                <td><b>Instructions</b></td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td><input type ="text" id ="medicine_1"/></td>
+                <td><input type ="text" id ="dosage_1"/></td>
+                <td><input type ="text" id ="instructions_1"/></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td><input type ="text" id ="medicine_2"/></td>
+                <td><input type ="text" id ="dosage_2" /></td>
+                <td><input type ="text" id ="instructions_2"/></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td><input type ="text" id ="medicine_3"/></td>
+                <td><input type ="text" id ="dosage_3" /></td>
+                <td><input type ="text" id ="instructions_3"/></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+          <button type="button" class="btn btn-primary add_prescription_field" style="height:40;">Add</button>
+        </div>
+
+            
+<!--
+     
+        
+
+          <span id="additional"></span>
+          <div class="form-group user_pass ">
+            <label class="col-lg-3 col-sm-3" for="others" contenteditable="true">Symptoms/ Problems:</label>
+            <div class="col-lg-9 col-sm-9">
+              <textarea class="form-control prescription"  id = "others" name ="others" rows="3"></textarea>
+            </div>
+          </div>
+
+          <div class="form-group user_pass ">
+            <label class="col-lg-3 col-sm-3" for="others" contenteditable="true">Patient history:</label>
+            <div class="col-lg-9 col-sm-9">
+              <textarea class="form-control prescription"  id = "others" name ="others" rows="3"></textarea>
+            </div>
+          </div>
+        </form>
+          
+
+          <div class="col-sm-offset-2 col-sm-10 user_pass ">
+              <button class="btn btn-success hidden-print hide" id ="addFields">Add</button>
+            <button class="btn btn-warning hidden-print" id ="clearFields">Clear</button>
+            
+            </div>
+          </div>
+          -->
+    <!--  3rd c olumn
+        <form class="form-horizontal" id ="patient_form"   onsubmit="return false;" >
+
+        
+
+          
+          <div class="form-group user_pass " >
+            <label class="col-lg-3 col-sm-3" for="others" contenteditable="true">Doctor Observations:</label>
+            <div class="col-lg-9 col-sm-9" style=" margin-bottom: 20px;">
+              <textarea class="form-control prescription"  id = "others" name ="others" rows="5"></textarea>
+            </div>
+          </div>
+      
+  
+          </form>
+     
+       
+    
+    
+
+
+      </div>
+
+      </div>
+
+    </div>
+      <div class="col-xs-9 col-sm-4 col-md-4 col-lg-4 hide">
+          <div id="controller" class="controller music-on sound-on no-restart">
+                <div class="dpad-container" >
+                    <div class="dpad-backdrop"></div>
+                    <div class="dpad dpad-up" command="navigation~401">
+                        <div class="arrow-up"></div>
+                        <div class="arrow-up2"></div>
+                    </div>
+                    <div class="dpad dpad-right" command="navigation~404">
+                        <div class="arrow-right2"></div>
+                        <div class="arrow-right"></div>
+                    </div>
+                    <div class="dpad dpad-down" command="navigation~405">
+                        <div class="arrow-down2"></div>
+                        <div class="arrow-down"></div>
+                    </div>
+                    <div class="dpad dpad-left " command="navigation~402">
+                        <div class="arrow-left"></div>
+                        <div class="arrow-left2"></div>
+                    </div>
+                    <div class="dpad dpad-center center-stop" command="navigation~403"></div>
+                </div>
+            </div>
+      </div>
+      <div class="col-xs-9 col-sm-4 col-md-4 col-lg-4 ">
+        <div class="form-div" style= "margin: 25px;">
+            <form class="form-horizontal" role="form" >
+            <div class="row">
+              <div class="col-sm-12 col-lg-12">
+                <form class="form-horizontal" id ="patient_form"   onsubmit="return false;" >
+          
+          <div class="form-group user_pass " >
+            <label class="col-lg-3 col-sm-3" for="others" contenteditable="true">Doctor Observations:</label>
+            <div class="col-lg-9 col-sm-9" style=" margin-bottom: 20px;">
+              <textarea class="form-control prescription"  id = "others" name ="others" rows="5"></textarea>
+            </div>
+          </div>
+         
+         
+      -->
+              <!-- Start First
+                  <div class="form-group">
+                      <div class="col-md-8 col-xs-8 col-sm-8 col-lg-8">
+                          <input type="text" class="form-control" id="speak" placeholder="speak .. ">
+                      </div>
+                        <div class="col-md-4 col-xs-4 col-sm-4 col-lg-4">
+                          <button type="button" class="btn btn-default send-sockets-speak">Speak</button>
+                        </div>
+                    </div>
+                </div>
+                 -->
+                <!-- End First -->
+
+                <!-- Start Second
+                <div class="row hide">
+                  <div class="form-group">
+                      <div class="col-md-8 col-xs-8 col-sm-8 col-lg-8">
+                          <input type="text" class="form-control" id="image" placeholder="image url .. ">
+                      </div>
+                        <div class="col-md-4 col-xs-4 col-sm-4 col-lg-4">
+                          <button type="button" class="btn btn-warning send-sockets-image">Submit</button>
+                        </div>
+                    </div>
+                </div>
+                 -->
+                <!-- End Second -->
+                          <!-- Start Second
+                <div class="row hide">
+                  <div class="form-group">
+                      <div class="col-md-8 col-xs-8 col-sm-8 col-lg-8">
+                          <input type="text" class="form-control" id="general" placeholder="navigation~50001">
+                      </div>
+                        <div class="col-md-4 col-xs-4 col-sm-4 col-lg-4">
+                          <button type="button" class="btn btn-danger send-sockets-general">Send</button>
+                        </div>
+                    </div>
+                </div>
+                 -->
+                <!-- End Second 
+                <br>
+                <br>
+                
+              </div>
+            </div>
+          </form>
+      </div>
+      </div>
+    </div>
+    -->
+  <!--
+    <div class="row hidden-print">
+      <div id="controls">
+          <div class="col-md-4 col-xs-12 col-sm-4 col-lg-4">
+              <div id="room-controls">
+                <p class="instructions">Room Name:</p>
+                <input id="room-name" 
+                  type="text" 
+                  placeholder="Enter a room name" />
+                <button id="button-join">Join Room</button>
+                <button id="button-leave">Leave Room</button>
+              </div>
+            </div>
+            <div class="col-md-4 col-xs-12 col-sm-4 col-lg-4">
+              <div id="log"></div>
+            </div>
+          <div class="col-md-4 col-xs-12 col-sm-4 col-lg-4">
+            <div id="preview">
+              <p class="instructions"></p>  
+    
+               <div id="local-media"></div>
+              <button id="button-preview">Preview My Camera</button> 
+            </div>
+          </div>
+      </div>
+    </div>
+    -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jq.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/chat.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/patient.js' %}"></script>
+    
+    <script src="/socket.io/socket.io.js"></script>  
+    <script>
+    var socketEndPoint = "https://sockets.mitrarobot.com"
+    var socket = io.connect(socketEndPoint);
+    </script>
+    </body>
+</html>

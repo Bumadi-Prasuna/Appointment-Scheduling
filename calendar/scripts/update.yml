@@ -1,0 +1,55 @@
+---
+- hosts: all
+  become_method: sudo
+  become: yes
+  gather_facts: False
+
+
+  vars:
+    ssh_key: "{{ home }}/.ssh/id_rsa"
+    user: ubuntu
+    home: "/home/{{ user }}"
+    venv_home: "{{ home }}/.virtualenvs"
+    venv_bin: "{{ home }}/.virtualenvs/{{ project_name }}/bin"
+    project_name: "mitron"
+    project_root: "{{ home }}/{{ project_name }}"
+    django_settings: "{{ 'config.settings.production' }}"
+    local_project_root: "{{ playbook_dir | dirname }}"
+    server_name: "{{ hostvars[inventory_hostname]['ansible_host'] }}"
+
+
+  tasks:
+    - debug:
+        msg: "{{ server_name }}"
+
+    - name: get variables
+      debug: var=hostvars
+
+    - name: rsync project to target host
+      synchronize:
+        src: "{{ local_project_root }}"
+        dest: "{{ home }}"
+        rsync_opts:
+          - "--delete"
+
+
+    - name: django makemigrations
+      command:
+        chdir="{{ project_root }}" "{{ venv_bin}}/python3" manage.py makemigrations --settings="{{ django_settings }}"
+
+
+    - name: django migrate
+      command:
+        chdir="{{ project_root }}" "{{ venv_bin}}/python3" manage.py migrate --noinput --settings="{{ django_settings }}"
+
+
+    - name: reload systemd to reread configs
+      systemd: daemon_reload=yes
+
+
+    - name: restart gunicorn
+      service: name=mgunicorn state=restarted
+
+
+    - name: restart nginx
+      service: name=nginx state=restarted

@@ -1,0 +1,18 @@
+[Unit]
+Description=mitron gunicorn daemon
+After=network.target
+
+[Service]
+PIDFile=/run/gunicorn/pid
+User={{ user }}
+Group={{ user }}
+RuntimeDirectory=gunicorn
+WorkingDirectory={{ project_root }}
+ExecStart={{ venv_bin }}/gunicorn --bind 0.0.0.0:8888 --log-file=- config.wsgi
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+Restart=on-abort
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

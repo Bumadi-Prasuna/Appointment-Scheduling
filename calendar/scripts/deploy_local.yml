@@ -1,0 +1,199 @@
+od#Deploys with  the local psql in the machine
+
+---
+- hosts: all
+  become_method: sudo
+  become: yes
+  gather_facts: False
+
+
+  vars:
+    ssh_key: "{{ home }}/.ssh/id_rsa"
+    user: ubuntu
+    home: "/home/{{ user }}"
+    venv_home: "{{ home }}/.virtualenvs"
+    venv_bin: "{{ home }}/.virtualenvs/{{ project_name }}/bin"
+    project_name: "mitron"
+    project_root: "{{ home }}/{{ project_name }}"
+    logs_root: "{{ home }}/{{ project_name }}/logs"
+    info_log_file: "{{ logs_root }}/info.log"
+    error_log_file: "{{ logs_root }}/error.log"
+    django_settings: "{{ 'config.settings.production' }}"
+    media_path : "{{ home }}/mitron"
+    local_project_root: "{{ playbook_dir | dirname }}"
+    local_ssh_key: /home/chillaranand/.ssh/id_rsa
+    server_name: "{{ hostvars[inventory_hostname]['ansible_host'] }}"
+
+
+  tasks:
+
+    - debug:
+        msg: "{{ server_name }}"
+
+    - name: get variables
+      debug: var=hostvars
+
+    - name: update apt cache
+      apt: update_cache=yes cache_valid_time=3600
+
+
+    - name: install required system packages
+      apt: name={{ item }} state=present
+      with_items:
+        - python3-pip
+        - python3-dev
+        - nginx
+        - git
+        - htop
+        - iotop
+        - nmap
+        - openssh-server
+        - tree
+        - vim
+        - zsh
+
+    - name: install postgresql
+      apt: name={{ item }} state=installed
+      with_items:
+        - postgresql
+        - postgresql-contrib
+        - libpq-dev
+        - python-psycopg2
+        - python3-psycopg2
+      tags:
+        - packages
+
+
+    - name: create postgres user
+      become: yes
+      become_user: postgres
+      postgresql_user:
+        name: "mitron"
+        password: "58T93I10R83M44N21"
+
+
+    - name: create postgres db
+      become: yes
+      become_user: postgres
+      postgresql_db:
+        name: "mitron"
+
+
+    - name: ensure postgres user has db access
+      become: yes
+      become_user: postgres
+      postgresql_privs:
+        db: mitron
+        role: mitron
+        objs: ALL_IN_SCHEMA
+        privs: SELECT,INSERT,UPDATE,DELETE
+
+
+    - name: backup db
+      become: yes
+      become_user: postgres
+      postgresql_db:
+        name: mitron
+        state: dump
+        target: /tmp/mitron.sql.gz
+
+
+    - name: rsync project to target host
+      synchronize:
+        src: "{{ local_project_root }}"
+        dest: "{{ home }}"
+        rsync_opts:
+          - "--delete"
+
+    - name: install virtualenv via pip
+      pip:
+        name: virtualenv
+        executable: pip3
+
+
+    - name: create virtualenv and install requirements
+      pip:
+        requirements: "{{ project_root }}/requirements/production.txt"
+        virtualenv: "{{ venv_home }}/{{ project_name }}"
+        virtualenv_python: python3
+
+    - name: Create media folder
+      file:
+        path: "{{ home }}/media"
+        state: directory
+        owner: root
+        group: root
+        mode: 0777
+
+    - name: Create logs folder
+      file:
+        path: "{{ logs_root }}"
+        state: directory
+        owner: root
+        group: root
+        mode: 0777        
+
+    - name: Creates info log file
+      file:
+        path: "{{ info_log_file }}"
+        state: touch
+        owner: root
+        group: root
+        mode: 0777
+
+    - name: Creates error log file
+      file:
+        path: "{{ error_log_file }}"
+        state: touch
+        owner: root
+        group: root
+        mode: 0777     
+
+    - name: django makemigrations
+      command:
+        chdir="{{ project_root }}" "{{ venv_bin}}/python3" manage.py makemigrations --settings="{{ django_settings }}"
+
+
+    - name: django migrate
+      command:
+        chdir="{{ project_root }}" "{{ venv_bin}}/python3" manage.py migrate --noinput --settings="{{ django_settings }}"
+
+
+    - name: run seed_db
+      command:
+        chdir="{{ project_root }}" "{{ venv_bin}}/python3" manage.py seed_db --settings="{{ django_settings }}"
+
+
+    - name: django collectstatic
+      command:
+        chdir="{{ project_root }}" "{{ venv_bin}}/python3" manage.py collectstatic --noinput --settings="{{ django_settings }}"
+
+
+    - name: create gunicorn service
+      template:
+        src: mgunicorn.service.j2
+        dest: /etc/systemd/system/mgunicorn.service
+        mode: 0777
+
+    - name: create nginx conf files
+      template:
+        src: nginx.conf.j2
+        dest: /etc/nginx/sites-available/default
+
+
+    - name: create nginx conf files
+      template:
+        src: nginx.conf.j2
+        dest: /etc/nginx/sites-enabled/default
+
+
+    - name: reload systemd to reread configs
+      systemd: daemon_reload=yes
+
+
+    - name: restart gunicorn
+      service: name=mgunicorn state=restarted
+
+
+    - name: restart nginx
+      service: name=nginx state=restarted

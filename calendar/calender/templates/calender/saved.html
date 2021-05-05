@@ -1,0 +1,340 @@
+{% load static i18n %}<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mitra Robot</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" media="print" href="print.css" />
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+  </head>
+  <body class="" style="background-color:lightgray;"  >
+    <!-- Remote media streaming-->
+    <!--
+    <div class="row" id="controls" >
+        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-5 hidden-print">
+          <div id="remote-media"  style="height:40px;"></div>
+        </div>
+        <div class="col-xs-12 col-sm-7 col-md-7 col-lg-7 user_pass hide">
+          <table width="100%;">
+              <tr>
+                  <td width="70%;" valign="center">
+                      <table width="100%;">
+                          <tr>
+                              <td width="50%;"> <b> Name  </b> </td>
+                              <td width="50%;"> <b>Phone number </b> </td>
+                          </tr>
+                          <tr>
+                              <td width="50%;"> <span id="user_name" class='user_details'></span>  </td>
+                              <td width="50%;"> <span id="user_mobile" class='user_details'></span>(<span id="user_mobile_validate"></span>) </td>
+                          </tr>
+                          <tr class="spaceOver">
+                              <td width="50%;"> <b> Temperature  </b> </td>
+                              <td width="50%;"> <b>Screening Result </b> </td>
+                          </tr>
+                          <tr>
+                              <td width="50%;">  <span id="user_temperature" class='user_details'></span> </td>
+                              <td width="50%;"> <span id="user_screening_result" class='user_details'>  </span> </td>
+                          </tr>
+                          
+                          
+                          <tr class="spaceOver">
+                              <td width="50%;"> <b> Exhibited Fever  </b> </td>
+                              <td width="50%;"> <b> Other Symptoms</b> </td>
+                          </tr>
+                          <tr>
+                              <td width="50%;"> <span id="user_is_fever" class='user_details'></span>   </td>
+                              <td width="50%;"> <span id="user_other_symtoms" class='user_details'></span>  </td>
+                          </tr>
+                          <tr class="spaceOver">
+                              <td width="50%;"> <b> Check-in time  </b> </td>
+                              <td width="50%;"> <b> Visit purpose </b> </td>
+                          </tr>
+                          <tr>
+                              <td width="50%;"> <span id="user_time" class='user_details'></span>    </td>
+                              <td width="50%;">  <span id="user_purpose" class='user_details'></span>  </td>
+                          </tr>
+                          <tr class="spaceOver">
+                              <td colspan="2">
+                                  Screened by your friendly Mitra Robot&reg; from Invento
+                              </td>
+                          </tr>
+                      </table>
+                  </td>
+                  <td width="30%;">                    
+                      <img id='user_img' src="" alt="Avatar" style="width:150px">
+                  </td>
+                  <tr>
+          </table>
+        </div>
+       
+      </div>
+      -->  
+      <div class="row" style="text-align: center;">
+
+        <h3>Patient  : <span id="patient_name">name</span></h3>
+      </div> 
+
+      <div class="row"  >
+        
+        <div class="col-md-4 col-xs-12 col-sm-8 col-lg-4" style="width: 33.33%;height:100px;" >
+          <h4> Age <span id="age"> age</span>,<span id="gender"> gender</span></h4>      
+        </div>
+        <div class="col-md-4 col-xs-12 col-sm-8 col-lg-4"  style="width: 25%;height:100px;"></div>
+        <div class="col-md-4 col-xs-12 col-sm-8 col-lg-4 "  style="width: 40%;height:100px; column-gap: 40px;">
+
+          <h4>Patient habits: <span id="age"> ..</span></h4>    
+          <button class="btn btn-default hidden-print" id ="printForm" style="background-color:black;color: white;border-radius: 8px;">Print Receipt</button>
+          <button class="btn btn-default hidden-print"  style="background-color:black;color: white;border-radius: 8px;">Next Patient</button>
+       
+          </div>  
+        </div>
+      </div> 
+       
+        
+
+   
+    <!-- Navigation steering -->
+    <div class="row">     
+      <div class="col-md-4 col-xs-12 col-sm-8 col-lg-4" style="background-color:gray;" > <!-- 1st column -->
+        <div class="user_pass ">  <h4>Live Readings</h4>
+        
+        <form class="form-horizontal" id ="patient_form" onsubmit="return false;" style="margin-left: 38px;">
+
+         
+
+          <div class="form-group">
+            <label class="col-lg-3 col-sm-3" for="bp" contenteditable="true">BP:</label>
+            <div class="col-lg-9 col-sm-9">
+              <input type="text" class="form-control prescription" id="bp" name="bp" placeholder="140/90">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-lg-3 col-sm-3" for="temperature" contenteditable="true">Temperature:</label>
+            <div class="col-lg-9 col-sm-9">
+              <input type="text" class="form-control prescription" id="temperature" name="temperature" placeholder="temperature">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-lg-3 col-sm-3" for="diagnosis" contenteditable="true">Diagnosis:</label>
+            <div class="col-lg-9 col-sm-9">
+              <input type="text" class="form-control" id="diagnosis" placeholder="diagnosis" name="diagnosis">
+            </div>
+          </div>
+          
+         
+
+          <div class="form-group">
+            <label class="col-lg-3 col-sm-3" for="allergy" contenteditable="true">Allergies:</label>
+            <div class="col-lg-9 col-sm-9">
+              <input type="text" class="form-control" id="allergy" placeholder="Not found any" name="allergy">
+            </div>
+          </div>
+
+          <span id="additional"></span>
+          <div class="form-group user_pass ">
+            <label class="col-lg-3 col-sm-3" for="others" contenteditable="true">Symptoms/ Problems:</label>
+            <div class="col-lg-9 col-sm-9">
+              <textarea class="form-control prescription"  id = "others" name ="others" rows="3"></textarea>
+            </div>
+          </div>
+
+          <div class="form-group user_pass ">
+            <label class="col-lg-3 col-sm-3" for="others" contenteditable="true">Patient history:</label>
+            <div class="col-lg-9 col-sm-9">
+              <textarea class="form-control prescription"  id = "others" name ="others" rows="3"></textarea>
+            </div>
+          </div>
+        </form>
+          
+
+          <div class="col-sm-offset-2 col-sm-10 user_pass ">
+              <button class="btn btn-success hidden-print hide" id ="addFields">Add</button>
+            <button class="btn btn-warning hidden-print" id ="clearFields">Clear</button>
+            
+            </div>
+          </div>
+      </div>
+      <div class="col-md-4 col-xs-12 col-sm-8 col-lg-4" id="controls"  style="width: 25%;"> <!--  2nd column-->
+        <div id="preview">
+          <p class="instructions">Video </p>
+          <div id="local-media"></div>
+          <button id="button-preview">Preview My Camera</button>
+        </div>
+       
+      
+      </div>
+      
+      <div class="col-md-4 col-xs-12 col-sm-8 col-lg-4"  style="width:40%;background-color:gray; padding-bottom: 10px;padding-top: 10px;"> <!--  3rd column-->
+        <form class="form-horizontal" id ="patient_form"   onsubmit="return false;" >
+          
+          <div class="form-group user_pass " >
+            <label class="col-lg-3 col-sm-3" for="others" contenteditable="true">Doctor Observations:</label>
+            <div class="col-lg-9 col-sm-9" style=" margin-bottom: 20px;">
+              <textarea class="form-control prescription"  id = "others" name ="others" rows="5"></textarea>
+            </div>
+          </div>
+         
+          <div class="form-group" >
+            <label class="col-lg-3 col-sm-3 " for="lab" contenteditable="true">Lab Test:</label>
+            <div class="col-lg-9 col-sm-9">
+              <input type="text" class="form-control" id="lab" placeholder="Not required" name="lab">
+            </div>
+          </div>
+  
+          </form>
+     
+        <table  id ="precription" style="padding-left: 0%;">
+          <thead>
+            <tr>
+              <td>S.No</td>
+              <td>Medicine</td>
+              <td>Dosage</td>
+              <td>Instructions</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td><input type ="text" id ="medicine_1"/></td>
+              <td><input type ="text" id ="dosage_1"/></td>
+              <td><input type ="text" id ="instructions_1"/></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><input type ="text" id ="medicine_2"/></td>
+              <td><input type ="text" id ="dosage_2" /></td>
+              <td><input type ="text" id ="instructions_2"/></td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><input type ="text" id ="medicine_3"/></td>
+              <td><input type ="text" id ="dosage_3" /></td>
+              <td><input type ="text" id ="instructions_3"/></td>
+            </tr>
+          </tbody>
+        </table>
+        <button type="button" class="btn btn-primary add_prescription_field" style="height:40;">Add</button>
+    
+
+
+
+      </div>
+
+    </div>
+      <div class="col-xs-9 col-sm-4 col-md-4 col-lg-4 hide">
+          <div id="controller" class="controller music-on sound-on no-restart">
+                <div class="dpad-container" >
+                    <div class="dpad-backdrop"></div>
+                    <div class="dpad dpad-up" command="navigation~401">
+                        <div class="arrow-up"></div>
+                        <div class="arrow-up2"></div>
+                    </div>
+                    <div class="dpad dpad-right" command="navigation~404">
+                        <div class="arrow-right2"></div>
+                        <div class="arrow-right"></div>
+                    </div>
+                    <div class="dpad dpad-down" command="navigation~405">
+                        <div class="arrow-down2"></div>
+                        <div class="arrow-down"></div>
+                    </div>
+                    <div class="dpad dpad-left " command="navigation~402">
+                        <div class="arrow-left"></div>
+                        <div class="arrow-left2"></div>
+                    </div>
+                    <div class="dpad dpad-center center-stop" command="navigation~403"></div>
+                </div>
+            </div>
+      </div>
+      <div class="col-xs-9 col-sm-4 col-md-4 col-lg-4 ">
+        <div class="form-div" style= "margin: 25px;">
+            <form class="form-horizontal" role="form" >
+            <div class="row">
+              <div class="col-sm-12 col-lg-12">
+              <!-- Start First -->
+                <div class="row hide">
+                  <div class="form-group">
+                      <div class="col-md-8 col-xs-8 col-sm-8 col-lg-8">
+                          <input type="text" class="form-control" id="speak" placeholder="speak .. ">
+                      </div>
+                        <div class="col-md-4 col-xs-4 col-sm-4 col-lg-4">
+                          <button type="button" class="btn btn-default send-sockets-speak">Speak</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- End First -->
+
+                <!-- Start Second -->
+                <div class="row hide">
+                  <div class="form-group">
+                      <div class="col-md-8 col-xs-8 col-sm-8 col-lg-8">
+                          <input type="text" class="form-control" id="image" placeholder="image url .. ">
+                      </div>
+                        <div class="col-md-4 col-xs-4 col-sm-4 col-lg-4">
+                          <button type="button" class="btn btn-warning send-sockets-image">Submit</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Second -->
+                          <!-- Start Second -->
+                <div class="row hide">
+                  <div class="form-group">
+                      <div class="col-md-8 col-xs-8 col-sm-8 col-lg-8">
+                          <input type="text" class="form-control" id="general" placeholder="navigation~50001">
+                      </div>
+                        <div class="col-md-4 col-xs-4 col-sm-4 col-lg-4">
+                          <button type="button" class="btn btn-danger send-sockets-general">Send</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Second -->
+                <br>
+                <br>
+                
+              </div>
+            </div>
+          </form>
+      </div>
+      </div>
+    </div>
+  <!--  ==================================== 
+    <div class="row hidden-print">
+      <div id="controls">
+          <div class="col-md-4 col-xs-12 col-sm-4 col-lg-4">
+              <div id="room-controls">
+                <p class="instructions">Room Name:</p>
+                <input id="room-name" 
+                  type="text" 
+                  placeholder="Enter a room name" />
+                <button id="button-join">Join Room</button>
+                <button id="button-leave">Leave Room</button>
+              </div>
+            </div>
+            <div class="col-md-4 col-xs-12 col-sm-4 col-lg-4">
+              <div id="log"></div>
+            </div>
+          <div class="col-md-4 col-xs-12 col-sm-4 col-lg-4">
+            <div id="preview">
+              <p class="instructions"></p>  -->
+    
+              <!-- <div id="local-media"></div>
+              <button id="button-preview">Preview My Camera</button> -->
+            </div>
+          </div>
+      </div>
+    </div>
+    <!--  ==================================== -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jq.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/chat.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+    
+    <script src="/socket.io/socket.io.js"></script>
+  </body>
+</html>
